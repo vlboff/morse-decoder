@@ -35,63 +35,49 @@ const MORSE_TABLE = {
     '---..':  '8',
     '----.':  '9',
     '-----':  '0',
+    '*****':  ' ',
 };
 
 function decode(expr) {
-    let result = '';
+    
     let resArr = [];
-    let morseSymbol = [];
     let morseStr = '';
     let codeStr = '';
+    
 
     let codeArrSymbol = expr.match(/.{1,10}/g);
 
-    for (i = 0; i < codeArrSymbol.length; i++){
+    for (let i = 0; i < codeArrSymbol.length; i++){
             codeStr += `${codeArrSymbol[i].match(/.{1,2}/g)},`;
     }
 
-    for (j = 0; j < codeStr.split(',').length; j++){
+    for (let j = 0; j < codeStr.split(',').length; j++){
         if (codeStr.split(',')[j] == '00'){
             morseStr += ' '; 
         } else if (codeStr.split(',')[j] == '10'){
             morseStr += '.';
         } else if (codeStr.split(',')[j] == '11'){
             morseStr += '-';
-        } else {
-            morseStr += ' ';
+        } else if (codeStr.split(',')[j] == '**'){
+            morseStr += '*';
         }
     }
 
-    for (p = 0; p < morseStr.length; p += 5){
-        morseSymbol.push(`${morseStr.slice(0+p, 5+p)}`);
-    }
 
-    for (let key in MORSE_TABLE){
-        morseSymbol.forEach((letter) =>{ 
-            if (key.includes(letter.trim())){
-                resArr.push(`${MORSE_TABLE[key]}`);
-            } else {
-                resArr.push(` `);
-            }
-        })
-    }
-
-    // for (u = 0; u < morseSymbol.length; u++){
-
-    //     if (morseSymbol[u].trim() == Object.keys(MORSE_TABLE)){
-    //         result += `${Object.values(MORSE_TABLE)}` 
-    //     }
-    // }
+    let arrMorse = morseStr.match(/.{1,5}/g);
 
 
-    console.log(res);
- 
+    arrMorse.forEach((letter) => {for (let key in MORSE_TABLE){ 
+        if (key === letter.trim()){
+            resArr.push(`${MORSE_TABLE[key]}`);
+        } 
+    }});
+
+    let result = resArr.join('');
+    console.log(result);
 }
-
-decode("00101010100000000010001011101000101110100000111111**********00001011110000111111000010111000101110100000111010");
-
-
+decode("0000101110000011111100101110100010111010000000101000000011100000111110**********00001010100011101110000011111100101111100000000010**********000010101000111011100010101010000011111100001111110010111010")
 
 module.exports = {
     decode
-}
+};
